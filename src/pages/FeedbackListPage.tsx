@@ -58,7 +58,7 @@ export default function FeedbackListPage({
           start_date: range?.[0]?.startOf('day')?.toISOString(),
           end_date: range?.[1]?.endOf('day')?.toISOString(),
         })
-        setItems(d.items)
+        setItems(d.items ?? [])
         setTotal(d.total)
       } catch (e) {
         message.error(e instanceof Error ? e.message : '加载失败')

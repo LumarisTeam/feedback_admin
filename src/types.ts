@@ -18,7 +18,7 @@ export interface FeedbackListItem {
 
 export interface FeedbackListData {
   total: number
-  items: FeedbackListItem[]
+  items: FeedbackListItem[] | null
 }
 
 // 详情里的单张图片（含 15 分钟临时签名 URL）
