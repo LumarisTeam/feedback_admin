@@ -38,7 +38,7 @@ export default function FeedbackListPage({
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(20)
+  const [pageSize, setPageSize] = useState(2)
 
   const [contact, setContact] = useState('')
   const [appName, setAppName] = useState<string | undefined>(undefined)
@@ -170,6 +170,8 @@ export default function FeedbackListPage({
             pageSize,
             total,
             showSizeChanger: true,
+            showQuickJumper: true,
+            pageSizeOptions: [2, 5, 10, 20],
             showTotal: (t) => `共 ${t} 条`,
             onChange: (p, ps) => {
               setPage(p)
