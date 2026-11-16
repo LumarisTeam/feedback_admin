@@ -1,3 +1,4 @@
+import { Input, Textarea, NativeSelect } from "../components/ui/input";
 import {
   ArrowRight,
   CheckCircle2,
@@ -468,7 +469,7 @@ export function DebugPage({
 
           <div className="form-grid">
             <Field label="测试反馈中心" required>
-              <select
+              <NativeSelect
                 value={centerId}
                 onChange={(event) => setCenterId(event.target.value)}
                 disabled={loadingCenters}
@@ -478,17 +479,17 @@ export function DebugPage({
                     {item.name} · {item.appId} / {item.env}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </Field>
             <Field label="测试渠道" required>
               {center?.snMode === "any" ? (
-                <input
+                <Input
                   value={sn}
                   onChange={(event) => setSn(event.target.value)}
                   placeholder="例如 lumaris-prod"
                 />
               ) : (
-                <select
+                <NativeSelect
                   value={sn}
                   onChange={(event) => setSn(event.target.value)}
                   disabled={loadingCenter}
@@ -498,18 +499,18 @@ export function DebugPage({
                       {item}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               )}
             </Field>
             <Field label="联系方式" required>
-              <input
+              <Input
                 value={contact}
                 onChange={(event) => setContact(event.target.value)}
                 placeholder="手机号或邮箱"
               />
             </Field>
             <Field label="反馈内容" required>
-              <textarea
+              <Textarea
                 className="manual-feedback-textarea"
                 rows={8}
                 value={content}
@@ -525,7 +526,7 @@ export function DebugPage({
                   {attachments.length} / {MAX_IMAGE_COUNT}
                 </small>
               </span>
-              <input
+              <Input
                 ref={imageInputRef}
                 className="visually-hidden"
                 type="file"
@@ -681,7 +682,7 @@ export function DebugPage({
               <div className="form-grid">
                 <Field label="Client ID">
                   <div className="input-action">
-                    <input
+                    <Input
                       value={clientId}
                       onChange={(event) => setClientId(event.target.value)}
                       disabled={attachments.length > 0}
@@ -697,7 +698,7 @@ export function DebugPage({
                 </Field>
                 <Field label="Request ID">
                   <div className="input-action">
-                    <input
+                    <Input
                       value={requestId}
                       onChange={(event) => setRequestId(event.target.value)}
                     />
@@ -716,7 +717,7 @@ export function DebugPage({
                     "必须是 JSON 对象，后端会补齐 app_name。"
                   }
                 >
-                  <textarea
+                  <Textarea
                     rows={5}
                     className="code-input"
                     value={extraText}

@@ -1,3 +1,5 @@
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../components/ui/table";
+import { Input, NativeSelect } from "../components/ui/input";
 import {
   ChevronRight,
   CirclePlus,
@@ -184,7 +186,7 @@ export function CentersPage({
           <span>关键词</span>
           <div className="input-with-icon">
             <Search size={15} />
-            <input
+            <Input
               value={draftKeyword}
               onChange={(event) => setDraftKeyword(event.target.value)}
               placeholder="名称、Center ID 或 AppID"
@@ -193,7 +195,7 @@ export function CentersPage({
         </label>
         <label className="compact-field">
           <span>状态</span>
-          <select
+          <NativeSelect
             value={draftStatus}
             onChange={(event) =>
               setDraftStatus(
@@ -204,7 +206,7 @@ export function CentersPage({
             <option value="">全部状态</option>
             <option value="enabled">已启用</option>
             <option value="disabled">已禁用</option>
-          </select>
+          </NativeSelect>
         </label>
         <div className="filter-actions">
           <Button tone="ghost" type="button" onClick={clearFilters}>
@@ -239,40 +241,40 @@ export function CentersPage({
           />
         ) : (
           <div className="table-wrap">
-            <table className="data-table center-table">
-              <thead>
-                <tr>
-                  <th>名称</th>
-                  <th>应用 / 环境</th>
-                  <th>SN 策略</th>
-                  <th>状态</th>
-                  <th>密钥</th>
-                  <th>到期时间</th>
-                  <th>最近调用</th>
-                  <th aria-label="操作" />
-                </tr>
-              </thead>
-              <tbody>
+            <Table className="data-table center-table">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>名称</TableHead>
+                  <TableHead>应用 / 环境</TableHead>
+                  <TableHead>SN 策略</TableHead>
+                  <TableHead>状态</TableHead>
+                  <TableHead>密钥</TableHead>
+                  <TableHead>到期时间</TableHead>
+                  <TableHead>最近调用</TableHead>
+                  <TableHead aria-label="操作" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {items.map((center) => (
-                  <tr
+                  <TableRow
                     key={center.centerId}
                     className="clickable-row"
                     onClick={() => setSelectedId(center.centerId)}
                   >
-                    <td>
+                    <TableCell>
                       <div className="stacked-cell">
                         <strong>{center.name}</strong>
                         <code>{center.centerId}</code>
                       </div>
-                    </td>
-                    <td>
+                    </TableCell>
+                    <TableCell>
                       <div className="stacked-cell">
                         <strong>{center.appId}</strong>
                         <span>{center.env}</span>
                       </div>
-                    </td>
-                    <td>{snModeLabel[center.snMode]}</td>
-                    <td>
+                    </TableCell>
+                    <TableCell>{snModeLabel[center.snMode]}</TableCell>
+                    <TableCell>
                       <Badge
                         tone={
                           center.status === "enabled" ? "success" : "warning"
@@ -280,22 +282,22 @@ export function CentersPage({
                       >
                         {center.status === "enabled" ? "已启用" : "已禁用"}
                       </Badge>
-                    </td>
-                    <td>
+                    </TableCell>
+                    <TableCell>
                       <span className="inline-metric">
                         <KeyRound size={15} />
                         v{center.secretVersion}
                       </span>
-                    </td>
-                    <td>{formatDate(center.expireAt)}</td>
-                    <td>{formatDateTime(center.lastUsedAt)}</td>
-                    <td>
+                    </TableCell>
+                    <TableCell>{formatDate(center.expireAt)}</TableCell>
+                    <TableCell>{formatDateTime(center.lastUsedAt)}</TableCell>
+                    <TableCell>
                       <ChevronRight className="row-chevron" size={17} />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
 

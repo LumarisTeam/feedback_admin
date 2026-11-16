@@ -1,3 +1,6 @@
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "../components/ui/table";
+import { Sheet } from "../components/ui/sheet";
+import { Input, NativeSelect } from "../components/ui/input";
 import {
   CalendarDays,
   ExternalLink,
@@ -166,7 +169,7 @@ export function FeedbackPage({
           <span>联系方式</span>
           <div className="input-with-icon">
             <Search size={15} />
-            <input
+            <Input
               value={draft.contact}
               onChange={(event) =>
                 setDraft((value) => ({ ...value, contact: event.target.value }))
@@ -177,7 +180,7 @@ export function FeedbackPage({
         </label>
         <label className="compact-field">
           <span>应用</span>
-          <select
+          <NativeSelect
             value={draft.appName}
             onChange={(event) =>
               setDraft((value) => ({ ...value, appName: event.target.value }))
@@ -186,11 +189,11 @@ export function FeedbackPage({
             <option value="">全部应用</option>
             <option value="lumaris">光序 · lumaris</option>
             <option value="lumalis">光汇 · lumalis</option>
-          </select>
+          </NativeSelect>
         </label>
         <label className="compact-field">
           <span>起始日期</span>
-          <input
+          <Input
             type="date"
             value={draft.startDate}
             onChange={(event) =>
@@ -200,7 +203,7 @@ export function FeedbackPage({
         </label>
         <label className="compact-field">
           <span>结束日期</span>
-          <input
+          <Input
             type="date"
             value={draft.endDate}
             onChange={(event) =>
@@ -235,46 +238,46 @@ export function FeedbackPage({
           />
         ) : (
           <div className="table-wrap">
-            <table className="data-table feedback-table">
-              <thead>
-                <tr>
-                  <th>反馈编号</th>
-                  <th>内容</th>
-                  <th>应用 / 页面</th>
-                  <th>联系方式</th>
-                  <th>附件</th>
-                  <th>提交时间</th>
-                  <th aria-label="操作" />
-                </tr>
-              </thead>
-              <tbody>
+            <Table className="data-table feedback-table">
+              <TableHeader>
+                <TableRow>
+                  <TableHead>反馈编号</TableHead>
+                  <TableHead>内容</TableHead>
+                  <TableHead>应用 / 页面</TableHead>
+                  <TableHead>联系方式</TableHead>
+                  <TableHead>附件</TableHead>
+                  <TableHead>提交时间</TableHead>
+                  <TableHead aria-label="操作" />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {items.map((item) => (
-                  <tr
+                  <TableRow
                     key={item.feedback_no}
                     className="clickable-row"
                     onClick={() => setSelectedNo(item.feedback_no)}
                   >
-                    <td>
+                    <TableCell>
                       <code className="id-code">{item.feedback_no}</code>
-                    </td>
-                    <td className="content-cell">
+                    </TableCell>
+                    <TableCell className="content-cell">
                       <span>{item.content}</span>
-                    </td>
-                    <td>
+                    </TableCell>
+                    <TableCell>
                       <div className="stacked-cell">
                         <strong>{extraValue(item.extra, "app_name")}</strong>
                         <span>{extraValue(item.extra, "page")}</span>
                       </div>
-                    </td>
-                    <td>{item.contact}</td>
-                    <td>
+                    </TableCell>
+                    <TableCell>{item.contact}</TableCell>
+                    <TableCell>
                       <span className="inline-metric">
                         <ImageIcon size={15} />
                         {item.image_count}
                       </span>
-                    </td>
-                    <td className="nowrap">{formatDateTime(item.created_at)}</td>
-                    <td>
+                    </TableCell>
+                    <TableCell className="nowrap">{formatDateTime(item.created_at)}</TableCell>
+                    <TableCell>
                       <IconButton
                         label={`查看反馈 ${item.feedback_no}`}
                         onClick={(event) => {
@@ -284,25 +287,25 @@ export function FeedbackPage({
                       >
                         <ExternalLink size={16} />
                       </IconButton>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
 
         <div className="feedback-pagination-options">
           <label>
             每页
-            <select
+            <NativeSelect
               value={filters.pageSize}
               onChange={(event) => setFilters((value) => ({
                 ...value, page: 1, pageSize: Number(event.target.value),
               }))}
             >
               {[2, 5, 10, 20].map((size) => <option key={size} value={size}>{size}</option>)}
-            </select>
+            </NativeSelect>
             条
           </label>
           <form onSubmit={(event) => {
@@ -313,7 +316,7 @@ export function FeedbackPage({
               setFilters((value) => ({ ...value, page: Math.min(page, Math.max(1, Math.ceil(total / value.pageSize))) }));
             }
           }}>
-            <label>跳至 <input name="page" type="number" min="1" max={Math.max(1, Math.ceil(total / filters.pageSize))} required aria-label="跳转页码" /> 页</label>
+            <label>跳至 <Input name="page" type="number" min="1" max={Math.max(1, Math.ceil(total / filters.pageSize))} required aria-label="跳转页码" /> 页</label>
             <Button type="submit">跳转</Button>
           </form>
         </div>
@@ -326,13 +329,7 @@ export function FeedbackPage({
       </section>
 
       {selectedNo && (
-        <>
-          <button
-            className="drawer-scrim"
-            type="button"
-            aria-label="关闭详情"
-            onClick={() => setSelectedNo(null)}
-          />
+        <Sheet title="反馈详情" onClose={() => setSelectedNo(null)}>
           <aside className="drawer feedback-drawer" aria-label="反馈详情">
             <header className="drawer-header">
               <div>
@@ -445,7 +442,7 @@ export function FeedbackPage({
               <Button onClick={() => setSelectedNo(null)}>关闭</Button>
             </footer>
           </aside>
-        </>
+        </Sheet>
       )}
     </div>
   );

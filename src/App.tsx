@@ -1,3 +1,4 @@
+import { Input } from "./components/ui/input";
 import {
   Aperture,
   ArrowRight,
@@ -220,7 +221,7 @@ function LoginPage({
           <Field label="API 地址" hint="留空时使用 Vite 的 /api 开发代理。">
             <div className="input-with-icon">
               <Server size={16} />
-              <input
+              <Input
                 value={baseUrl}
                 onChange={(event) => setBaseUrl(event.target.value)}
                 placeholder="http://127.0.0.1:8080"
@@ -231,7 +232,7 @@ function LoginPage({
           <Field label="管理员 Token" required>
             <div className="input-with-icon input-with-action">
               <LockKeyhole size={16} />
-              <input
+              <Input
                 type={showToken ? "text" : "password"}
                 value={token}
                 onChange={(event) => setToken(event.target.value)}
@@ -251,7 +252,7 @@ function LoginPage({
           <Field label="操作人">
             <div className="input-with-icon">
               <KeyRound size={16} />
-              <input
+              <Input
                 value={operator}
                 onChange={(event) => setOperator(event.target.value)}
                 placeholder="admin"

@@ -1,3 +1,5 @@
+import { Sheet } from "./ui/sheet";
+import { Input, NativeSelect } from "./ui/input";
 import {
   Activity,
   Clipboard,
@@ -128,12 +130,7 @@ export function CenterDrawer({
 
   return (
     <>
-      <button
-        className="drawer-scrim"
-        type="button"
-        aria-label="关闭中心详情"
-        onClick={onClose}
-      />
+      <Sheet title="反馈中心详情" onClose={onClose}>
       <aside className="drawer center-drawer" aria-label="反馈中心详情">
         <header className="drawer-header">
           <div>
@@ -298,6 +295,7 @@ export function CenterDrawer({
           </footer>
         )}
       </aside>
+      </Sheet>
 
       <ConfirmDialog
         open={confirmAction === "status"}
@@ -413,13 +411,13 @@ function GenerateCodeDialog({
       <form className="form-grid" onSubmit={generate}>
         <Field label="SN" required>
           {center.snMode === "any" ? (
-            <input
+            <Input
               value={sn}
               onChange={(event) => setSn(event.target.value)}
               placeholder="lumaris-prod"
             />
           ) : (
-            <select
+            <NativeSelect
               value={sn}
               onChange={(event) => setSn(event.target.value)}
               required
@@ -430,25 +428,25 @@ function GenerateCodeDialog({
                   {item}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           )}
         </Field>
         <Field label="Timestamp">
-          <input
+          <Input
             type="number"
             value={timestamp}
             onChange={(event) => setTimestamp(event.target.value)}
           />
         </Field>
         <Field label="Nonce" hint="留空由后端生成。">
-          <input
+          <Input
             value={nonce}
             onChange={(event) => setNonce(event.target.value)}
             placeholder="自动生成"
           />
         </Field>
         <Field label="TTL（秒）">
-          <input
+          <Input
             type="number"
             min={1}
             max={3600}

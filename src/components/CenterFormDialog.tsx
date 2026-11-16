@@ -1,3 +1,4 @@
+import { Input, Textarea, NativeSelect } from "./ui/input";
 import { LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -120,7 +121,7 @@ export function CenterFormDialog({
     >
       <form className="form-grid" onSubmit={submit}>
         <Field label="名称" required>
-          <input
+          <Input
             value={form.name}
             onChange={(event) => update("name", event.target.value)}
             placeholder="光序生产中心"
@@ -128,35 +129,35 @@ export function CenterFormDialog({
           />
         </Field>
         <Field label="AppID" required>
-          <input
+          <Input
             value={form.appId}
             onChange={(event) => update("appId", event.target.value)}
             placeholder="lumaris"
           />
         </Field>
         <Field label="环境" required>
-          <input
+          <Input
             value={form.env}
             onChange={(event) => update("env", event.target.value)}
             placeholder="prod"
           />
         </Field>
         <Field label="SN 模式" required>
-          <select
+          <NativeSelect
             value={form.snMode}
             onChange={(event) => update("snMode", event.target.value as SNMode)}
           >
             <option value="whitelist">白名单</option>
             <option value="prefix">前缀匹配</option>
             <option value="any">允许任意 SN</option>
-          </select>
+          </NativeSelect>
         </Field>
         <Field
           label="SN 列表"
           required={form.snMode !== "any"}
           hint="每行一个，也可用逗号分隔。"
         >
-          <textarea
+          <Textarea
             rows={4}
             value={form.snText}
             onChange={(event) => update("snText", event.target.value)}
@@ -165,21 +166,21 @@ export function CenterFormDialog({
           />
         </Field>
         <Field label="到期时间">
-          <input
+          <Input
             type="datetime-local"
             value={form.expireAt}
             onChange={(event) => update("expireAt", event.target.value)}
           />
         </Field>
         <Field label="联系人">
-          <input
+          <Input
             value={form.contact}
             onChange={(event) => update("contact", event.target.value)}
             placeholder="dev@example.com"
           />
         </Field>
         <Field label="备注">
-          <textarea
+          <Textarea
             rows={2}
             value={form.remark}
             onChange={(event) => update("remark", event.target.value)}

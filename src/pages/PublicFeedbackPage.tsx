@@ -1,3 +1,4 @@
+import { Input, Textarea } from "../components/ui/input";
 import {
   Aperture,
   ArrowRight,
@@ -339,7 +340,7 @@ export function PublicFeedbackPage() {
               </div>
 
               <Field label="问题描述" required>
-                <textarea
+                <Textarea
                   className="public-feedback-textarea"
                   value={content}
                   onChange={(event) => setContent(event.target.value)}
@@ -357,7 +358,7 @@ export function PublicFeedbackPage() {
                 required
                 hint="仅用于跟进本次问题，不会公开显示。"
               >
-                <input
+                <Input
                   value={contact}
                   onChange={(event) => setContact(event.target.value)}
                   placeholder="手机号或邮箱"

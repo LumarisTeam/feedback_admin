@@ -7,42 +7,20 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
+import * as Dialog from "@radix-ui/react-dialog";
+import * as AlertDialog from "@radix-ui/react-alert-dialog";
+import { Button as BaseButton } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 export type ButtonTone = "primary" | "secondary" | "danger" | "ghost";
 
-export function Button({
-  children,
-  tone = "secondary",
-  className = "",
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  tone?: ButtonTone;
-}) {
-  return (
-    <button className={`button button-${tone} ${className}`.trim()} {...props}>
-      {children}
-    </button>
-  );
+export function Button({ children, tone = "secondary", className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { tone?: ButtonTone }) {
+  const variants = { primary: "default", secondary: "secondary", danger: "destructive", ghost: "ghost" } as const;
+  return <BaseButton variant={variants[tone]} className={cn("button", className)} {...props}>{children}</BaseButton>;
 }
 
-export function IconButton({
-  label,
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  label: string;
-}) {
-  return (
-    <button
-      className="icon-button"
-      type="button"
-      title={label}
-      aria-label={label}
-      {...props}
-    >
-      {children}
-    </button>
-  );
+export function IconButton({ label, children, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { label: string }) {
+  return <BaseButton variant="ghost" size="icon" className={className} type="button" title={label} aria-label={label} {...props}>{children}</BaseButton>;
 }
 
 export function Badge({
@@ -52,7 +30,8 @@ export function Badge({
   tone?: "success" | "warning" | "danger" | "neutral" | "info";
   children: ReactNode;
 }) {
-  return <span className={`badge badge-${tone}`}>{children}</span>;
+  const colors = { success: "border-emerald-200 bg-emerald-50 text-emerald-700", warning: "border-amber-200 bg-amber-50 text-amber-700", danger: "border-red-200 bg-red-50 text-red-700", neutral: "border-border bg-muted text-foreground", info: "border-blue-200 bg-blue-50 text-blue-700" };
+  return <span className={cn("inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium", colors[tone])}>{children}</span>;
 }
 
 export function Modal({
@@ -70,42 +49,20 @@ export function Modal({
   children: ReactNode;
   wide?: boolean;
 }) {
-  useEffect(() => {
-    if (!open) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
-
-  if (!open) return null;
   return (
-    <div className="modal-layer" role="presentation">
-      <button
-        className="modal-scrim"
-        aria-label="关闭"
-        onClick={onClose}
-        type="button"
-      />
-      <section
-        className={`modal ${wide ? "modal-wide" : ""}`}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-      >
-        <header className="modal-header">
-          <div>
-            <h2 id="modal-title">{title}</h2>
-            {description && <p>{description}</p>}
-          </div>
-          <IconButton label="关闭" onClick={onClose}>
-            <X size={18} />
-          </IconButton>
-        </header>
-        <div className="modal-body">{children}</div>
-      </section>
-    </div>
+    <Dialog.Root open={open} onOpenChange={(next) => { if (!next) onClose(); }}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-[80] bg-black/50" />
+        <Dialog.Content className={cn("fixed left-1/2 top-1/2 z-[80] max-h-[90vh] w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg border border-border bg-background p-6 text-foreground shadow-lg focus:outline-none", wide ? "max-w-2xl" : "max-w-lg")}>
+          <header className="flex items-start justify-between gap-4 pb-4">
+            <div><Dialog.Title className="text-lg font-semibold leading-none tracking-tight">{title}</Dialog.Title>{description && <Dialog.Description className="mt-2 text-sm text-muted-foreground">{description}</Dialog.Description>}</div>
+            <Dialog.Close asChild><IconButton label="关闭"><X size={18} /></IconButton></Dialog.Close>
+          </header>
+          {!description && <Dialog.Description className="sr-only">{title}</Dialog.Description>}
+          {children}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }
 
@@ -129,21 +86,19 @@ export function ConfirmDialog({
   onClose: () => void;
 }) {
   return (
-    <Modal open={open} title={title} description={description} onClose={onClose}>
-      <div className="modal-actions">
-        <Button onClick={onClose} disabled={busy}>
-          取消
-        </Button>
-        <Button
-          tone={danger ? "danger" : "primary"}
-          onClick={onConfirm}
-          disabled={busy}
-        >
-          {busy && <LoaderCircle className="spin" size={16} />}
-          {confirmLabel}
-        </Button>
-      </div>
-    </Modal>
+    <AlertDialog.Root open={open} onOpenChange={(next) => { if (!next && !busy) onClose(); }}>
+      <AlertDialog.Portal>
+        <AlertDialog.Overlay className="fixed inset-0 z-[80] bg-black/50" />
+        <AlertDialog.Content className="fixed left-1/2 top-1/2 z-[80] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-lg border border-border bg-background p-6 shadow-lg focus:outline-none">
+          <AlertDialog.Title className="text-lg font-semibold">{title}</AlertDialog.Title>
+          <AlertDialog.Description className="mt-2 text-sm text-muted-foreground">{description}</AlertDialog.Description>
+          <div className="mt-6 flex justify-end gap-2">
+            <AlertDialog.Cancel asChild><Button disabled={busy}>取消</Button></AlertDialog.Cancel>
+            <Button tone={danger ? "danger" : "primary"} onClick={onConfirm} disabled={busy}>{busy && <LoaderCircle className="spin" size={16} />}{confirmLabel}</Button>
+          </div>
+        </AlertDialog.Content>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
   );
 }
 
@@ -288,7 +243,7 @@ export function Toast({
 
   if (!toast) return null;
   return (
-    <div className={`toast toast-${toast.kind}`} role="status">
+    <div className={cn("fixed bottom-6 right-6 z-[100] flex max-w-sm items-center gap-3 rounded-lg border bg-background p-4 text-sm text-foreground shadow-lg", toast.kind === "error" && "border-red-300 text-red-700")} role="status">
       <span>{toast.text}</span>
       <IconButton label="关闭提示" onClick={onDismiss}>
         <X size={15} />
