@@ -12,6 +12,7 @@ import {
 import { useState, type ReactNode } from "react";
 
 import { IconButton } from "./Ui";
+import { ThemeSwitcher } from "./theme/ThemeSwitcher";
 
 export type View = "feedbacks" | "centers" | "debug";
 
@@ -103,6 +104,10 @@ export function AppShell({
         </nav>
 
         <div className="sidebar-footer">
+          <div className="sidebar-appearance">
+            <span>外观</span>
+            <ThemeSwitcher />
+          </div>
           <div className="connection">
             <CircleUserRound size={18} />
             <div>
@@ -125,13 +130,16 @@ export function AppShell({
           </div>
           <strong>Lens Feedback</strong>
         </div>
-        <IconButton label="退出连接" onClick={onLogout}>
-          <LogOut size={17} />
-        </IconButton>
+        <div className="mobile-header-actions">
+          <ThemeSwitcher />
+          <IconButton label="退出连接" onClick={onLogout}>
+            <LogOut size={17} />
+          </IconButton>
+        </div>
       </div>
 
       <main className="main">
-        <div className="mobile-nav" aria-label="主导航">
+        <nav className="mobile-nav" aria-label="主导航">
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -139,6 +147,7 @@ export function AppShell({
                 key={item.id}
                 type="button"
                 className={item.id === activeView ? "active" : ""}
+                aria-current={item.id === activeView ? "page" : undefined}
                 onClick={() => onNavigate(item.id)}
               >
                 <Icon size={17} />
@@ -146,7 +155,7 @@ export function AppShell({
               </button>
             );
           })}
-        </div>
+        </nav>
         {children}
       </main>
     </div>
@@ -167,7 +176,7 @@ export function PageHeader({
   return (
     <header className="page-header">
       <div>
-        <span className="eyebrow">{eyebrow}</span>
+        <span className="sr-only">{eyebrow}</span>
         <h1>{title}</h1>
         <p>{description}</p>
       </div>

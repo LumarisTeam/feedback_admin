@@ -1,3 +1,4 @@
+import { ThemeSwitcher } from "../components/theme/ThemeSwitcher";
 import { Input, Textarea } from "../components/ui/input";
 import {
   Aperture,
@@ -156,7 +157,7 @@ export function PublicFeedbackPage() {
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError("");
-    if (!selectedApp) {
+  if (!selectedApp) {
       setError("反馈入口尚未配置");
       return;
     }
@@ -230,7 +231,7 @@ export function PublicFeedbackPage() {
     setRequestId(randomId("feedback"));
   };
 
-    if (!selectedApp) {
+  if (!selectedApp) {
     return (
       <main className="public-feedback-page public-feedback-missing">
         <div className="public-brand">
@@ -242,6 +243,7 @@ export function PublicFeedbackPage() {
             <span>FEEDBACK</span>
           </div>
         </div>
+        <div className="public-missing-appearance"><ThemeSwitcher /></div>
         <section className="public-feedback-card public-config-card">
           <CircleAlert size={28} />
           <h1>反馈入口尚未配置</h1>
@@ -265,10 +267,13 @@ export function PublicFeedbackPage() {
             <span>光序 · 光汇</span>
           </div>
         </div>
-        <span className="public-private-label">
-          <ShieldCheck size={15} />
-          匿名提交
-        </span>
+        <div className="public-header-actions">
+          <ThemeSwitcher />
+          <span className="public-private-label">
+            <ShieldCheck size={15} />
+            匿名提交
+          </span>
+        </div>
       </header>
 
       {feedbackNo ? (
@@ -276,7 +281,6 @@ export function PublicFeedbackPage() {
           <span className="public-success-icon">
             <CheckCircle2 size={32} />
           </span>
-          <span className="eyebrow">Feedback received</span>
           <h1>反馈已收到</h1>
           <p>
             已记录来自「{selectedApp.label}」的问题，我们会尽快查看处理。
@@ -293,7 +297,6 @@ export function PublicFeedbackPage() {
       ) : (
         <>
           <section className="public-feedback-intro">
-            <span className="eyebrow">Tell us what happened</span>
             <h1>遇到问题了？</h1>
             <p>
               描述发生了什么，必要时附上截图。信息越具体，我们越容易定位问题。

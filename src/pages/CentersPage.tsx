@@ -20,6 +20,7 @@ import {
   Badge,
   Button,
   EmptyState,
+  IconButton,
   LoadingBlock,
   Pagination,
   SecretDialog,
@@ -292,7 +293,15 @@ export function CentersPage({
                     <TableCell>{formatDate(center.expireAt)}</TableCell>
                     <TableCell>{formatDateTime(center.lastUsedAt)}</TableCell>
                     <TableCell>
-                      <ChevronRight className="row-chevron" size={17} />
+                      <IconButton
+                        label={`查看反馈中心 ${center.name}`}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          setSelectedId(center.centerId);
+                        }}
+                      >
+                        <ChevronRight className="row-chevron" size={17} />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

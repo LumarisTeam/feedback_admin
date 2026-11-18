@@ -11,6 +11,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Button as BaseButton } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useDialogFocus } from "@/lib/use-dialog-focus";
 
 export type ButtonTone = "primary" | "secondary" | "danger" | "ghost";
 
@@ -20,7 +21,7 @@ export function Button({ children, tone = "secondary", className, ...props }: Re
 }
 
 export function IconButton({ label, children, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> & { label: string }) {
-  return <BaseButton variant="ghost" size="icon" className={className} type="button" title={label} aria-label={label} {...props}>{children}</BaseButton>;
+  return <BaseButton variant="ghost" size="icon" className={cn("icon-button text-muted-foreground", className)} type="button" title={label} aria-label={label} {...props}>{children}</BaseButton>;
 }
 
 export function Badge({
@@ -30,8 +31,14 @@ export function Badge({
   tone?: "success" | "warning" | "danger" | "neutral" | "info";
   children: ReactNode;
 }) {
-  const colors = { success: "border-emerald-200 bg-emerald-50 text-emerald-700", warning: "border-amber-200 bg-amber-50 text-amber-700", danger: "border-red-200 bg-red-50 text-red-700", neutral: "border-border bg-muted text-foreground", info: "border-blue-200 bg-blue-50 text-blue-700" };
-  return <span className={cn("inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium", colors[tone])}>{children}</span>;
+  const colors = {
+    success: "bg-[var(--success-soft)] text-[var(--success)]",
+    warning: "bg-[var(--warning-soft)] text-[var(--warning)]",
+    danger: "bg-[var(--danger-soft)] text-destructive",
+    neutral: "bg-muted text-muted-foreground",
+    info: "bg-[var(--accent-soft)] text-primary",
+  };
+  return <span className={cn("inline-flex shrink-0 items-center rounded-md px-2 py-1 text-[11px] font-medium", colors[tone])}>{children}</span>;
 }
 
 export function Modal({
@@ -49,11 +56,12 @@ export function Modal({
   children: ReactNode;
   wide?: boolean;
 }) {
+  const focusHandlers = useDialogFocus();
   return (
     <Dialog.Root open={open} onOpenChange={(next) => { if (!next) onClose(); }}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-[80] bg-black/50" />
-        <Dialog.Content className={cn("fixed left-1/2 top-1/2 z-[80] max-h-[90vh] w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg border border-border bg-background p-6 text-foreground shadow-lg focus:outline-none", wide ? "max-w-2xl" : "max-w-lg")}>
+        <Dialog.Overlay className="fixed inset-0 z-[80] bg-[var(--overlay)] backdrop-blur-sm" />
+        <Dialog.Content {...focusHandlers} className={cn("fixed left-1/2 top-1/2 z-[80] max-h-[90vh] w-[calc(100%_-_2rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-2xl border border-border bg-[var(--surface)] p-6 text-foreground shadow-lg focus:outline-none", wide ? "max-w-2xl" : "max-w-lg")}>
           <header className="flex items-start justify-between gap-4 pb-4">
             <div><Dialog.Title className="text-lg font-semibold leading-none tracking-tight">{title}</Dialog.Title>{description && <Dialog.Description className="mt-2 text-sm text-muted-foreground">{description}</Dialog.Description>}</div>
             <Dialog.Close asChild><IconButton label="关闭"><X size={18} /></IconButton></Dialog.Close>
@@ -85,11 +93,12 @@ export function ConfirmDialog({
   onConfirm: () => void;
   onClose: () => void;
 }) {
+  const focusHandlers = useDialogFocus();
   return (
     <AlertDialog.Root open={open} onOpenChange={(next) => { if (!next && !busy) onClose(); }}>
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className="fixed inset-0 z-[80] bg-black/50" />
-        <AlertDialog.Content className="fixed left-1/2 top-1/2 z-[80] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-lg border border-border bg-background p-6 shadow-lg focus:outline-none">
+        <AlertDialog.Overlay className="fixed inset-0 z-[80] bg-[var(--overlay)] backdrop-blur-sm" />
+        <AlertDialog.Content {...focusHandlers} className="fixed left-1/2 top-1/2 z-[80] w-[calc(100%_-_2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-border bg-[var(--surface)] p-6 shadow-lg focus:outline-none">
           <AlertDialog.Title className="text-lg font-semibold">{title}</AlertDialog.Title>
           <AlertDialog.Description className="mt-2 text-sm text-muted-foreground">{description}</AlertDialog.Description>
           <div className="mt-6 flex justify-end gap-2">
@@ -243,7 +252,7 @@ export function Toast({
 
   if (!toast) return null;
   return (
-    <div className={cn("fixed bottom-6 right-6 z-[100] flex max-w-sm items-center gap-3 rounded-lg border bg-background p-4 text-sm text-foreground shadow-lg", toast.kind === "error" && "border-red-300 text-red-700")} role="status">
+    <div className={cn("fixed bottom-4 right-4 z-[100] flex w-[calc(100%_-_2rem)] max-w-sm items-center gap-3 rounded-xl border border-border bg-[var(--surface)] p-4 text-sm text-foreground shadow-lg", toast.kind === "error" && "border-destructive/40 text-destructive")} role="status">
       <span>{toast.text}</span>
       <IconButton label="关闭提示" onClick={onDismiss}>
         <X size={15} />

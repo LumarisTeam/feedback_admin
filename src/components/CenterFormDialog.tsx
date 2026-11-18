@@ -125,7 +125,7 @@ export function CenterFormDialog({
             value={form.name}
             onChange={(event) => update("name", event.target.value)}
             placeholder="光序生产中心"
-            autoFocus
+            data-autofocus
           />
         </Field>
         <Field label="AppID" required>

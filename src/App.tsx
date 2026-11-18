@@ -2,18 +2,17 @@ import { Input } from "./components/ui/input";
 import {
   Aperture,
   ArrowRight,
-  CheckCircle2,
   Eye,
   EyeOff,
   KeyRound,
   LoaderCircle,
   LockKeyhole,
   Server,
-  ShieldCheck,
 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
 import { FeedbackAdminApi } from "./api";
+import { ThemeSwitcher } from "./components/theme/ThemeSwitcher";
 import { AppShell, type View } from "./components/AppShell";
 import { Button, Field, Toast, type ToastMessage } from "./components/Ui";
 import { CentersPage } from "./pages/CentersPage";
@@ -177,6 +176,7 @@ function LoginPage({
 
   return (
     <main className="login-page">
+      <div className="login-appearance"><ThemeSwitcher /></div>
       <section className="login-intro">
         <div className="login-brand">
           <div className="brand-mark large">
@@ -187,32 +187,10 @@ function LoginPage({
             <span>Admin Console</span>
           </div>
         </div>
-        <div className="login-statement">
-          <span className="eyebrow">Operations workspace</span>
-          <h1>把每一次反馈<br />变成可控的调试记录。</h1>
-          <p>
-            统一查看反馈、管理应用接入，并通过真实校验链路验证后端服务。
-          </p>
-        </div>
-        <div className="login-capabilities">
-          <div>
-            <ShieldCheck size={18} />
-            <span>管理员 Bearer Token 鉴权</span>
-          </div>
-          <div>
-            <CheckCircle2 size={18} />
-            <span>反馈中心与一次性校验码管理</span>
-          </div>
-          <div>
-            <Server size={18} />
-            <span>连接 Lens_Backend</span>
-          </div>
-        </div>
       </section>
 
       <section className="login-panel">
         <div className="login-panel-heading">
-          <span className="eyebrow">Secure connection</span>
           <h2>连接反馈服务</h2>
           <p>Token 仅保存在当前浏览器会话中。</p>
         </div>
